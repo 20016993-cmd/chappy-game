@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>チャッピーゲームセンター</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #101020;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: 38px;
+}
+
+button {
+    padding: 12px 20px;
+    margin: 6px;
+    border: 0;
+    border-radius: 10px;
+    background: #444;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #666;
+}
+
+#menu {
+    max-width: 800px;
+    margin: auto;
+}
+
+.gameButton {
+    width: 220px;
+    height: 70px;
+    font-size: 18px;
+}
+
+.game {
+    display: none;
+    max-width: 800px;
+    margin: auto;
+}
+
+canvas {
+    background: #050509;
+    border: 4px solid #555;
+}
+
+#tetris {
+    width: 300px;
+    height: 600px;
+}
+
+#clickTarget {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ff3366;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+#reactionBox {
+    width: 500px;
+    height: 250px;
+    margin: 20px auto;
+    background: #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+#memory {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    gap: 10px;
+    justify-content: center;
+}
+
+.memoryButton {
+    width: 80px;
+    height: 80px;
+}
+
+#numberBoard {
+    display: grid;
+    grid-template-columns: repeat(4, 70px);
+    gap: 8px;
+    justify-content: center;
+}
+
+.numberButton {
+    width: 70px;
+    height: 70px;
+    font-size: 22px;
+}
+
+.info {
+    font-size: 20px;
+}
+
+.back {
+    background: #8b2222;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 チャッピーゲームセンター</h1>
+
+<!-- ================= MENU ================= -->
+
+<div id="menu">
+
+    <h2>ゲームを選んでね！</h2>
+
+    <button class="gameButton" onclick="startTetris()">
+        🧱 ブロック落とし
+    </button>
+
+    <button class="gameButton" onclick="startClick()">
+        🎯 ターゲットクリック
+    </button>
+
+    <button class="gameButton" onclick="startReaction()">
+        ⚡ 反射神経
+    </button>
+
+    <button class="gameButton" onclick="startMemory()">
+        🧠 記憶ゲーム
+    </button>
+
+    <button class="gameButton" onclick="startCar()">
+        🚗 車よけ
+    </button>
+
+    <button class="gameButton" onclick="startJump()">
+        🐦 ジャンプ
+    </button>
+
+    <button class="gameButton" onclick="startBalloon()">
+        🎈 風船割り
+    </button>
+
+    <button class="gameButton" onclick="startCoin()">
+        🪙 コイン集め
+    </button>
+
+    <button class="gameButton" onclick="startEnemy()">
+        👾 敵よけ
+    </button>
+
+    <button class="gameButton" onclick="startNumber()">
+        🔢 数字パズル
+    </button>
+
+</div>
+
+
+<!-- ================= TETRIS ================= -->
+
+<div id="gameTetris" class="game">
+
+    <h2>🧱 ブロック落とし</h2>
+
+    <canvas id="tetris" width="300" height="600"></canvas>
+
+    <p class="info">
+        スコア：<span id="tScore">0</span>
+    </p>
+
+    <p>
+        ← → 移動　↑ 回転　↓ 落下　SPACE 一気に落下
+    </p>
+
+    <button onclick="restartTetris()">🔄 リスタート</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= CLICK ================= -->
+
+<div id="gameClick" class="game">
+
+    <h2>🎯 ターゲットクリック</h2>
+
+    <p class="info">
+        スコア：<span id="clickScore">0</span>
+    </p>
+
+    <p class="info">
+        残り：<span id="clickTime">20</span>
+    </p>
+
+    <button id="clickTarget">🎯</button>
+
+    <br>
+
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= REACTION ================= -->
+
+<div id="gameReaction" class="game">
+
+    <h2>⚡ 反射神経ゲーム</h2>
+
+    <div id="reactionBox" onclick="reactionClick()">
+        STARTを押してね
+    </div>
+
+    <p class="info">
+        タイム：<span id="reactionResult">---</span> ms
+    </p>
+
+    <button onclick="reactionStartGame()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= MEMORY ================= -->
+
+<div id="gameMemory" class="game">
+
+    <h2>🧠 記憶ゲーム</h2>
+
+    <p>光った順番を覚えて押そう！</p>
+
+    <div id="memory"></div>
+
+    <p class="info">
+        レベル：<span id="memoryLevel">1</span>
+    </p>
+
+    <button onclick="memoryStartGame()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= CAR ================= -->
+
+<div id="gameCar" class="game">
+
+    <h2>🚗 車よけ</h2>
+
+    <canvas id="carCanvas" width="400" height="500"></canvas>
+
+    <p>← → で移動</p>
+
+    <p class="info">
+        スコア：<span id="carScore">0</span>
+    </p>
+
+    <button onclick="startCar()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= JUMP ================= -->
+
+<div id="gameJump" class="game">
+
+    <h2>🐦 ジャンプゲーム</h2>
+
+    <canvas id="jumpCanvas" width="500" height="300"></canvas>
+
+    <p>SPACEでジャンプ</p>
+
+    <p class="info">
+        スコア：<span id="jumpScore">0</span>
+    </p>
+
+    <button onclick="startJump()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= BALLOON ================= -->
+
+<div id="gameBalloon" class="game">
+
+    <h2>🎈 風船割り</h2>
+
+    <canvas id="balloonCanvas" width="500" height="400"></canvas>
+
+    <p class="info">
+        スコア：<span id="balloonScore">0</span>
+    </p>
+
+    <button onclick="startBalloon()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= COIN ================= -->
+
+<div id="gameCoin" class="game">
+
+    <h2>🪙 コイン集め</h2>
+
+    <canvas id="coinCanvas" width="500" height="400"></canvas>
+
+    <p>矢印キーで移動</p>
+
+    <p class="info">
+        コイン：<span id="coinScore">0</span>
+    </p>
+
+    <button onclick="startCoin()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= ENEMY ================= -->
+
+<div id="gameEnemy" class="game">
+
+    <h2>👾 敵よけ</h2>
+
+    <canvas id="enemyCanvas" width="500" height="400"></canvas>
+
+    <p>矢印キーで逃げよう！</p>
+
+    <p class="info">
+        スコア：<span id="enemyScore">0</span>
+    </p>
+
+    <button onclick="startEnemy()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<!-- ================= NUMBER ================= -->
+
+<div id="gameNumber" class="game">
+
+    <h2>🔢 数字パズル</h2>
+
+    <p>1 → 2 → 3 → 4……の順番に押そう！</p>
+
+    <div id="numberBoard"></div>
+
+    <p class="info">
+        タイム：<span id="numberTime">0</span>
+    </p>
+
+    <button onclick="startNumber()">START</button>
+    <button class="back" onclick="backMenu()">🏠 メニュー</button>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   共通
+===================================================== */
+
+const games = [
+    "gameTetris",
+    "gameClick",
+    "gameReaction",
+    "gameMemory",
+    "gameCar",
+    "gameJump",
+    "gameBalloon",
+    "gameCoin",
+    "gameEnemy",
+    "gameNumber"
+];
+
+function hideGames() {
+
+    games.forEach(id => {
+        document.getElementById(id).style.display = "none";
+    });
+
+}
+
+function showGame(id) {
+
+    document.getElementById("menu").style.display = "none";
+
+    hideGames();
+
+    document.getElementById(id).style.display = "block";
+
+}
+
+function backMenu() {
+
+    hideGames();
+
+    document.getElementById("menu").style.display = "block";
+
+}
+
+
+/* =====================================================
+   1. ブロックゲーム
+===================================================== */
+
+const tc =
+    document.getElementById("tetris").getContext("2d");
+
+const W = 10;
+const H = 20;
+const BS = 30;
+
+let tBoard;
+let tPiece;
+let tScore = 0;
+let tRunning = false;
+
+const tShapes = [
+    [[1,1,1,1]],
+
+    [
+        [2,2],
+        [2,2]
+    ],
+
+    [
+        [0,3,0],
+        [3,3,3]
+    ],
+
+    [
+        [0,4,4],
+        [4,4,0]
+    ],
+
+    [
+        [5,5,0],
+        [0,5,5]
+    ],
+
+    [
+        [6,0,0],
+        [6,6,6]
+    ],
+
+    [
+        [0,0,7],
+        [7,7,7]
+    ]
+];
+
+const tColors = [
+    "",
+    "#00ffff",
+    "#ffff00",
+    "#aa44ff",
+    "#44dd66",
+    "#ff4444",
+    "#4488ff",
+    "#ff9911"
+];
+
+function createTBoard() {
+
+    return Array.from(
+        {length:H},
+        () => Array(W).fill(0)
+    );
+
+}
+
+function newTPiece() {
+
+    const n =
+        Math.floor(Math.random() * tShapes.length);
+
+    return {
+        matrix: tShapes[n].map(r => [...r]),
+        x: 3,
+        y: 0
+    };
+
+}
+
+function tCollision(p) {
+
+    for(let y=0;y<p.matrix.length;y++) {
+
+        for(let x=0;x<p.matrix[y].length;x++) {
+
+            if(!p.matrix[y][x]) continue;
+
+            const px=p.x+x;
+            const py=p.y+y;
+
+            if(px<0 || px>=W || py>=H)
+                return true;
+
+            if(py>=0 && tBoard[py][px])
+                return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+function tMerge() {
+
+    tPiece.matrix.forEach((row,y)=>{
+        row.forEach((v,x)=>{
+
+            if(v)
+                tBoard[tPiece.y+y][tPiece.x+x]=v;
+
+        });
+    });
+
+}
+
+function tRotate() {
+
+    const old=tPiece.matrix;
+
+    const rotated=old[0].map(
+        (_,i)=>old.map(row=>row[i]).reverse()
+    );
+
+    tPiece.matrix=rotated;
+
+    if(tCollision(tPiece))
+        tPiece.matrix=old;
+
+}
+
+function tClear() {
+
+    for(let y=H-1;y>=0;y--) {
+
+        if(tBoard[y].every(v=>v)) {
+
+            tBoard.splice(y,1);
+
+            tBoard.unshift(
+                Array(W).fill(0)
+            );
+
+            tScore+=100;
+
+            y++;
+
+        }
+
+    }
+
+}
+
+function tDrawBlock(x,y,v) {
+
+    tc.fillStyle=tColors[v];
+
+    tc.fillRect(
+        x*BS,
+        y*BS,
+        BS,
+        BS
+    );
+
+    tc.strokeStyle="#111";
+
+    tc.strokeRect(
+        x*BS,
+        y*BS,
+        BS,
+        BS
+    );
+
+}
+
+function tDraw() {
+
+    tc.clearRect(0,0,300,600);
+
+    for(let y=0;y<H;y++) {
+
+        for(let x=0;x<W;x++) {
+
+            if(tBoard[y][x])
+                tDrawBlock(x,y,tBoard[y][x]);
+
+        }
+
+    }
+
+    if(tPiece) {
+
+        tPiece.matrix.forEach((row,y)=>{
+            row.forEach((v,x)=>{
+
+                if(v)
+                    tDrawBlock(
+                        tPiece.x+x,
+                        tPiece.y+y,
+                        v
+                    );
+
+            });
+        });
+
+    }
+
+}
+
+function tDrop() {
+
+    tPiece.y++;
+
+    if(tCollision(tPiece)) {
+
+        tPiece.y--;
+
+        tMerge();
+
+        tClear();
+
+        tPiece=newTPiece();
+
+        if(tCollision(tPiece)) {
+
+            tRunning=false;
+
+            alert(
+                "GAME OVER!\nスコア："+tScore
+            );
+
+        }
+
+    }
+
+    document.getElementById("tScore").textContent=tScore;
+
+}
+
+let tTimer;
+
+function startTetris() {
+
+    showGame("gameTetris");
+
+    clearInterval(tTimer);
+
+    tBoard=createTBoard();
+
+    tPiece=newTPiece();
+
+    tScore=0;
+
+    tRunning=true;
+
+    document.getElementById("tScore").textContent=0;
+
+    tTimer=setInterval(()=>{
+
+        if(tRunning)
+            tDrop();
+
+        tDraw();
+
+    },600);
+
+    tDraw();
+
+}
+
+function restartTetris() {
+    startTetris();
+}
+
+document.addEventListener("keydown",e=>{
+
+    if(!tRunning) return;
+
+    if(e.key==="ArrowLeft") {
+
+        tPiece.x--;
+
+        if(tCollision(tPiece))
+            tPiece.x++;
+
+    }
+
+    if(e.key==="ArrowRight") {
+
+        tPiece.x++;
+
+        if(tCollision(tPiece))
+            tPiece.x--;
+
+    }
+
+    if(e.key==="ArrowDown") {
+
+        tDrop();
+
+    }
+
+    if(e.key==="ArrowUp") {
+
+        tRotate();
+
+    }
+
+    if(e.code==="Space") {
+
+        while(!tCollision(tPiece))
+            tPiece.y++;
+
+        tPiece.y--;
+
+        tDrop();
+
+    }
+
+    tDraw();
+
+});
+
+
+/* =====================================================
+   2. クリック
+===================================================== */
+
+let clickScore=0;
+let clickTime=20;
+let clickTimer;
+
+function startClick() {
+
+    showGame("gameClick");
+
+    clickScore=0;
+    clickTime=20;
+
+    document.getElementById("clickScore").textContent=0;
+    document.getElementById("clickTime").textContent=20;
+
+    clearInterval(clickTimer);
+
+    moveClickTarget();
+
+    clickTimer=setInterval(()=>{
+
+        clickTime--;
+
+        document.getElementById("clickTime").textContent=
+            clickTime;
+
+        if(clickTime<=0) {
+
+            clearInterval(clickTimer);
+
+            alert("終了！\nスコア："+clickScore);
+
+        }
+
+    },1000);
+
+}
+
+function moveClickTarget() {
+
+    const target=
+        document.getElementById("clickTarget");
+
+    target.style.transform=
+        `translate(${Math.random()*250-125}px,
+                   ${Math.random()*200-100}px)`;
+
+}
+
+document.getElementById("clickTarget")
+.addEventListener("click",()=>{
+
+    if(clickTime<=0) return;
+
+    clickScore++;
+
+    document.getElementById("clickScore").textContent=
+        clickScore;
+
+    moveClickTarget();
+
+});
+
+
+/* =====================================================
+   3. 反射神経
+===================================================== */
+
+let reactionReady=false;
+let reactionStartTime=0;
+
+function startReaction() {
+
+    showGame("gameReaction");
+
+    reactionReady=false;
+
+    document.getElementById("reactionBox").textContent=
+        "STARTを押してね";
+
+}
+
+function reactionStartGame() {
+
+    const box=
+        document.getElementById("reactionBox");
+
+    reactionReady=false;
+
+    box.textContent="待って…";
+
+    box.style.background="#444";
+
+    setTimeout(()=>{
+
+        reactionReady=true;
+
+        reactionStartTime=performance.now();
+
+        box.textContent="今！！！";
+
+        box.style.background="#008844";
+
+    },1000+Math.random()*3000);
+
+}
+
+function reactionClick() {
+
+    if(!reactionReady) return;
+
+    const time=Math.round(
+        performance.now()-reactionStartTime
+    );
+
+    document.getElementById("reactionResult").textContent=
+        time;
+
+    reactionReady=false;
+
+}
+
+
+/* =====================================================
+   4. 記憶
+===================================================== */
+
+let memorySequence=[];
+let memoryPlayer=[];
+let memoryLevelValue=1;
+
+function startMemory() {
+
+    showGame("gameMemory");
+
+    createMemoryButtons();
+
+}
+
+function createMemoryButtons() {
+
+    const area=document.getElementById("memory");
+
+    area.innerHTML="";
+
+    for(let i=0;i<9;i++) {
+
+        const b=document.createElement("button");
+
+        b.className="memoryButton";
+
+        b.textContent=i+1;
+
+        b.onclick=()=>memoryClick(i);
+
+        area.appendChild(b);
+
+    }
+
+}
+
+function memoryStartGame() {
+
+    memorySequence=[];
+    memoryPlayer=[];
+    memoryLevelValue=1;
+
+    document.getElementById("memoryLevel").textContent=1;
+
+    nextMemoryRound();
+
+}
+
+function nextMemoryRound() {
+
+    memoryPlayer=[];
+
+    memorySequence.push(
+        Math.floor(Math.random()*9)
+    );
+
+    showMemory();
+
+}
+
+async function showMemory() {
+
+    const buttons=
+        document.querySelectorAll(".memoryButton");
+
+    for(const i of memorySequence) {
+
+        buttons[i].style.background="#fff";
+        buttons[i].style.color="#000";
+
+        await new Promise(r=>setTimeout(r,400));
+
+        buttons[i].style.background="#444";
+        buttons[i].style.color="#fff";
+
+        await new Promise(r=>setTimeout(r,200));
+
+    }
+
+}
+
+function memoryClick(i) {
+
+    const n=memoryPlayer.length;
+
+    if(i!==memorySequence[n]) {
+
+        alert(
+            "ゲームオーバー！\nレベル："+memoryLevelValue
+        );
+
+        return;
+
+    }
+
+    memoryPlayer.push(i);
+
+    if(memoryPlayer.length===memorySequence.length) {
+
+        memoryLevelValue++;
+
+        document.getElementById("memoryLevel")
+            .textContent=memoryLevelValue;
+
+        setTimeout(nextMemoryRound,500);
+
+    }
+
+}
+
+
+/* =====================================================
+   5. 車よけ
+===================================================== */
+
+const carCtx=
+    document.getElementById("carCanvas").getContext("2d");
+
+let carX=180;
+let enemyCarY=-50;
+let carScore=0;
+let carRunning=false;
+let carLoop;
+
+function startCar() {
+
+    showGame("gameCar");
+
+    carX=180;
+    enemyCarY=-50;
+    carScore=0;
+    carRunning=true;
+
+    document.getElementById("carScore").textContent=0;
+
+    cancelAnimationFrame(carLoop);
+
+    carAnimation();
+
+}
+
+function carAnimation() {
+
+    if(!carRunning) return;
+
+    carCtx.clearRect(0,0,400,500);
+
+    carCtx.fillStyle="#333";
+    carCtx.fillRect(70,0,260,500);
+
+    carCtx.fillStyle="#2196f3";
+    carCtx.fillRect(carX,420,40,60);
+
+    carCtx.fillStyle="#ff4444";
+    carCtx.fillRect(180,enemyCarY,40,60);
+
+    enemyCarY+=5;
+
+    if(enemyCarY>500) {
+
+        enemyCarY=-70;
+
+        carScore++;
+
+        document.getElementById("carScore").textContent=
+            carScore;
+
+    }
+
+    if(
+        carX<220 &&
+        carX+40>180 &&
+        420<enemyCarY+60 &&
+        480>enemyCarY
+    ) {
+
+        carRunning=false;
+
+        alert(
+            "ぶつかった！\nスコア："+carScore
+        );
+
+    }
+
+    carLoop=requestAnimationFrame(carAnimation);
+
+}
+
+
+/* =====================================================
+   6. ジャンプ
+===================================================== */
+
+const jumpCtx=
+    document.getElementById("jumpCanvas").getContext("2d");
+
+let jumpY=220;
+let jumpVelocity=0;
+let jumpObstacleX=500;
+let jumpScore=0;
+let jumpRunning=false;
+let jumpLoop;
+
+function startJump() {
+
+    showGame("gameJump");
+
+    jumpY=220;
+    jumpVelocity=0;
+    jumpObstacleX=500;
+    jumpScore=0;
+    jumpRunning=true;
+
+    document.getElementById("jumpScore").textContent=0;
+
+    cancelAnimationFrame(jumpLoop);
+
+    jumpAnimation();
+
+}
+
+function jumpAnimation() {
+
+    if(!jumpRunning) return;
+
+    jumpCtx.clearRect(0,0,500,300);
+
+    jumpCtx.fillStyle="#3a3a3a";
+    jumpCtx.fillRect(0,260,500,40);
+
+    jumpCtx.fillStyle="#44aaff";
+    jumpCtx.fillRect(70,jumpY,35,40);
+
+    jumpCtx.fillStyle="#ff4444";
+    jumpCtx.fillRect(jumpObstacleX,220,35,40);
+
+    jumpVelocity+=0.7;
+    jumpY+=jumpVelocity;
+
+    if(jumpY>220) {
+
+        jumpY=220;
+        jumpVelocity=0;
+
+    }
+
+    jumpObstacleX-=5;
+
+    if(jumpObstacleX<-40) {
+
+        jumpObstacleX=500;
+
+        jumpScore++;
+
+        document.getElementById("jumpScore").textContent=
+            jumpScore;
+
+    }
+
+    if(
+        jumpObstacleX<105 &&
+        jumpObstacleX+35>70 &&
+        jumpY+40>220
+    ) {
+
+        jumpRunning=false;
+
+        alert(
+            "ゲームオーバー！\nスコア："+jumpScore
+        );
+
+    }
+
+    jumpLoop=requestAnimationFrame(jumpAnimation);
+
+}
+
+document.addEventListener("keydown",e=>{
+
+    if(
+        e.code==="Space" &&
+        jumpRunning &&
+        jumpY>=220
+    ) {
+
+        jumpVelocity=-12;
+
+    }
+
+});
+
+
+/* =====================================================
+   7. 風船
+===================================================== */
+
+const balloonCtx=
+    document.getElementById("balloonCanvas").getContext("2d");
+
+let balloonX=250;
+let balloonY=350;
+let balloonScore=0;
+let balloonRunning=false;
+let balloonLoop;
+
+function startBalloon() {
+
+    showGame("gameBalloon");
+
+    balloonScore=0;
+
+    document.getElementById("balloonScore").textContent=0;
+
+    balloonRunning=true;
+
+    balloonLoop=setInterval(drawBalloon,700);
+
+    drawBalloon();
+
+}
+
+function drawBalloon() {
+
+    if(!balloonRunning) return;
+
+    balloonX=30+Math.random()*440;
+    balloonY=50+Math.random()*300;
+
+    balloonCtx.clearRect(0,0,500,400);
+
+    balloonCtx.fillStyle="#ff4477";
+
+    balloonCtx.beginPath();
+
+    balloonCtx.arc(
+        balloonX,
+        balloonY,
+        30,
+        0,
+        Math.PI*2
+    );
+
+    balloonCtx.fill();
+
+}
+
+document.getElementById("balloonCanvas")
+.addEventListener("click",e=>{
+
+    if(!balloonRunning) return;
+
+    const rect=
+        e.target.getBoundingClientRect();
+
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+
+    const distance=
+        Math.hypot(
+            x-balloonX,
+            y-balloonY
+        );
+
+    if(distance<30) {
+
+        balloonScore++;
+
+        document.getElementById("balloonScore")
+            .textContent=balloonScore;
+
+        drawBalloon();
+
+    }
+
+});
+
+
+/* =====================================================
+   8. コイン
+===================================================== */
+
+const coinCtx=
+    document.getElementById("coinCanvas").getContext("2d");
+
+let playerX=230;
+let playerY=180;
+let coinX=100;
+let coinY=100;
+let coinScore=0;
+let coinRunning=false;
+let coinLoop;
+
+let keys={};
+
+document.addEventListener("keydown",e=>{
+    keys[e.key]=true;
+});
+
+document.addEventListener("keyup",e=>{
+    keys[e.key]=false;
+});
+
+function startCoin() {
+
+    showGame("gameCoin");
+
+    playerX=230;
+    playerY=180;
+    coinScore=0;
+
+    coinRunning=true;
+
+    document.getElementById("coinScore").textContent=0;
+
+    coinLoop=requestAnimationFrame(coinAnimation);
+
+}
+
+function coinAnimation() {
+
+    if(!coinRunning) return;
+
+    coinCtx.clearRect(0,0,500,400);
+
+    if(keys["ArrowLeft"]) playerX-=4;
+    if(keys["ArrowRight"]) playerX+=4;
+    if(keys["ArrowUp"]) playerY-=4;
+    if(keys["ArrowDown"]) playerY+=4;
+
+    playerX=Math.max(0,Math.min(470,playerX));
+    playerY=Math.max(0,Math.min(370,playerY));
+
+    coinCtx.fillStyle="#44aaff";
+    coinCtx.fillRect(playerX,playerY,30,30);
+
+    coinCtx.fillStyle="#ffd700";
+
+    coinCtx.beginPath();
+
+    coinCtx.arc(
+        coinX,
+        coinY,
+        15,
+        0,
+        Math.PI*2
+    );
+
+    coinCtx.fill();
+
+    if(
+        Math.abs(playerX+15-coinX)<25 &&
+        Math.abs(playerY+15-coinY)<25
+    ) {
+
+        coinScore++;
+
+        document.getElementById("coinScore").textContent=
+            coinScore;
+
+        coinX=20+Math.random()*460;
+        coinY=20+Math.random()*360;
+
+    }
+
+    coinLoop=requestAnimationFrame(coinAnimation);
+
+}
+
+
+/* =====================================================
+   9. 敵よけ
+===================================================== */
+
+const enemyCtx=
+    document.getElementById("enemyCanvas").getContext("2d");
+
+let playerEX=250;
+let playerEY=200;
+let enemyX=50;
+let enemyY=50;
+let enemyScore=0;
+let enemyRunning=false;
+let enemyLoop;
+
+function startEnemy() {
+
+    showGame("gameEnemy");
+
+    playerEX=250;
+    playerEY=200;
+
+    enemyX=50;
+    enemyY=50;
+
+    enemyScore=0;
+
+    enemyRunning=true;
+
+    document.getElementById("enemyScore").textContent=0;
+
+    enemyLoop=requestAnimationFrame(enemyAnimation);
+
+}
+
+function enemyAnimation() {
+
+    if(!enemyRunning) return;
+
+    enemyCtx.clearRect(0,0,500,400);
+
+    if(keys["ArrowLeft"]) playerEX-=4;
+    if(keys["ArrowRight"]) playerEX+=4;
+    if(keys["ArrowUp"]) playerEY-=4;
+    if(keys["ArrowDown"]) playerEY+=4;
+
+    playerEX=Math.max(0,Math.min(470,playerEX));
+    playerEY=Math.max(0,Math.min(370,playerEY));
+
+    const dx=playerEX-enemyX;
+    const dy=playerEY-enemyY;
+
+    const distance=Math.hypot(dx,dy);
+
+    if(distance>0) {
+
+        enemyX+=dx/distance*1.5;
+        enemyY+=dy/distance*1.5;
+
+    }
+
+    enemyCtx.fillStyle="#44aaff";
+    enemyCtx.fillRect(playerEX,playerEY,30,30);
+
+    enemyCtx.fillStyle="#ff3333";
+    enemyCtx.fillRect(enemyX,enemyY,30,30);
+
+    enemyScore++;
+
+    document.getElementById("enemyScore").textContent=
+        Math.floor(enemyScore/10);
+
+    if(distance<35) {
+
+        enemyRunning=false;
+
+        alert(
+            "捕まった！\nスコア："+Math.floor(enemyScore/10)
+        );
+
+    }
+
+    enemyLoop=requestAnimationFrame(enemyAnimation);
+
+}
+
+
+/* =====================================================
+   10. 数字パズル
+===================================================== */
+
+let numberNext=1;
+let numberStartTime=0;
+
+function startNumber() {
+
+    showGame("gameNumber");
+
+    numberNext=1;
+
+    const board=
+        document.getElementById("numberBoard");
+
+    board.innerHTML="";
+
+    const nums=
+        Array.from(
+            {length:16},
+            (_,i)=>i+1
+        );
+
+    nums.sort(()=>Math.random()-0.5);
+
+    nums.forEach(n=>{
+
+        const b=document.createElement("button");
+
+        b.className="numberButton";
+
+        b.textContent=n;
+
+        b.onclick=()=>numberClick(n,b);
+
+        board.appendChild(b);
+
+    });
+
+    numberStartTime=performance.now();
+
+}
+
+function numberClick(n,b) {
+
+    if(n!==numberNext) return;
+
+    b.style.visibility="hidden";
+
+    numberNext++;
+
+    if(numberNext>16) {
+
+        const time=Math.round(
+            performance.now()-numberStartTime
+        );
+
+        document.getElementById("numberTime")
+            .textContent=time+" ms";
+
+        alert(
+            "クリア！\nタイム："+time+" ms"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   初期状態
+===================================================== */
+
+hideGames();
+
+</script>
+
+</body>
+</html>
