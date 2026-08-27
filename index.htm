@@ -4,119 +4,68 @@
 <meta charset="UTF-8">
 <title>チャッピーゲームセンター</title>
 
-<style>
-* {
-    box-sizing: border-box;
+<style>.extraBoard{display:grid;grid-template-columns:repeat(4,82px);gap:10px;justify-content:center;margin:20px auto}.extraBoard button{height:82px;font-size:34px;border:0;border-radius:16px;background:#292d52;color:#fff;cursor:pointer}.extraBoard button.active{background:#ffd84d}.bigWord{font-size:42px;font-weight:900;margin:24px}.choiceGrid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.choiceGrid button{min-width:90px;padding:14px;border:0;border-radius:12px;color:#fff;font-weight:800;cursor:pointer}.gameInput{padding:12px 16px;border-radius:10px;border:2px solid #66709a;font-size:20px;text-align:center;max-width:280px}.simonGrid{display:grid;grid-template-columns:repeat(2,100px);gap:12px;justify-content:center}.simonGrid button{height:100px;border:0;border-radius:18px;font-size:38px;cursor:pointer;opacity:.7}.simonGrid button.lit{opacity:1;transform:scale(1.06);box-shadow:0 0 28px #fff}.lightsGrid{display:grid;grid-template-columns:repeat(5,55px);gap:6px;justify-content:center;margin:20px auto}.lightsGrid button{width:55px;height:55px;border:0;border-radius:9px;background:#ffd84d;cursor:pointer}.lightsGrid button.off{background:#25283f}
+*{box-sizing:border-box}
+html,body{min-height:100%;}
+body{
+ margin:0;
+ color:#fff;
+ font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+ text-align:center;
+ overflow-x:hidden;
+ background:
+   radial-gradient(circle at 15% 15%,rgba(82,64,180,.45),transparent 28%),
+   radial-gradient(circle at 85% 20%,rgba(0,180,255,.25),transparent 25%),
+   radial-gradient(circle at 50% 100%,rgba(255,70,170,.18),transparent 35%),
+   linear-gradient(135deg,#080b20 0%,#11152f 48%,#080b1c 100%);
+ position:relative;
 }
-
-body {
-    margin: 0;
-    background: #101020;
-    color: white;
-    font-family: sans-serif;
-    text-align: center;
+body::before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;
+ background-image:
+   radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.5px),
+   radial-gradient(circle at 70% 65%,#fff 0 1px,transparent 1.5px),
+   radial-gradient(circle at 45% 80%,#fff 0 1px,transparent 1.5px),
+   radial-gradient(circle at 90% 45%,#fff 0 1px,transparent 1.5px);
+ background-size:180px 180px,230px 230px,260px 260px,200px 200px;
 }
-
-h1 {
-    font-size: 38px;
+body::after{
+ content:"";position:fixed;width:420px;height:420px;border-radius:50%;
+ left:-180px;bottom:-170px;pointer-events:none;
+ background:radial-gradient(circle,rgba(89,70,255,.28),transparent 68%);
+ filter:blur(12px);
 }
-
-button {
-    padding: 12px 20px;
-    margin: 6px;
-    border: 0;
-    border-radius: 10px;
-    background: #444;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+h1{font-size:clamp(32px,5vw,54px);margin:28px 0 8px;font-weight:900;letter-spacing:.04em;text-shadow:0 4px 24px rgba(0,0,0,.45)}
+h2{font-size:26px;margin:10px 0 22px}
+#menu{width:min(940px,94vw);margin:0 auto 40px;padding:28px 22px 34px;position:relative}
+#menu h2{margin-bottom:26px}
+#menu::before{
+ content:"";position:absolute;inset:0;border-radius:28px;
+ background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+ box-shadow:0 24px 80px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.08);
+ backdrop-filter:blur(14px);z-index:-1;
 }
-
-button:hover {
-    background: #666;
+button{
+ padding:12px 20px;margin:6px;border:1px solid rgba(255,255,255,.12);border-radius:12px;
+ background:linear-gradient(180deg,#45475a,#303243);color:white;font-size:16px;cursor:pointer;
+ box-shadow:0 8px 18px rgba(0,0,0,.22);transition:.18s ease; 
 }
-
-#menu {
-    max-width: 800px;
-    margin: auto;
-}
-
-.gameButton {
-    width: 220px;
-    height: 70px;
-    font-size: 18px;
-}
-
-.game {
-    display: none;
-    max-width: 800px;
-    margin: auto;
-}
-
-canvas {
-    background: #050509;
-    border: 4px solid #555;
-}
-
-#tetris {
-    width: 300px;
-    height: 600px;
-}
-
-#clickTarget {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #ff3366;
-    border: none;
-    cursor: pointer;
-    font-size: 25px;
-}
-
-#reactionBox {
-    width: 500px;
-    height: 250px;
-    margin: 20px auto;
-    background: #444;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 25px;
-    cursor: pointer;
-}
-
-#memory {
-    display: grid;
-    grid-template-columns: repeat(3, 80px);
-    gap: 10px;
-    justify-content: center;
-}
-
-.memoryButton {
-    width: 80px;
-    height: 80px;
-}
-
-#numberBoard {
-    display: grid;
-    grid-template-columns: repeat(4, 70px);
-    gap: 8px;
-    justify-content: center;
-}
-
-.numberButton {
-    width: 70px;
-    height: 70px;
-    font-size: 22px;
-}
-
-.info {
-    font-size: 20px;
-}
-
-.back {
-    background: #8b2222;
-}
+button:hover{transform:translateY(-2px);background:linear-gradient(180deg,#5a5d73,#3a3d52);box-shadow:0 12px 25px rgba(0,0,0,.3)}
+button:active{transform:translateY(1px)}
+.gameButton{width:260px;height:78px;font-size:18px;font-weight:700}
+.game{display:none;width:min(850px,94vw);margin:25px auto 40px;padding:28px 18px 34px;border-radius:26px;background:rgba(12,15,37,.78);border:1px solid rgba(255,255,255,.12);box-shadow:0 25px 70px rgba(0,0,0,.35);backdrop-filter:blur(14px)}
+canvas{background:#050509;border:4px solid #596078;border-radius:12px;box-shadow:0 15px 40px rgba(0,0,0,.35);max-width:100%;height:auto}
+#tetris{width:300px;height:600px}
+#clickTarget{width:86px;height:86px;border-radius:50%;background:linear-gradient(145deg,#ff4d86,#ff245d);border:none;cursor:pointer;font-size:25px;box-shadow:0 0 0 8px rgba(255,55,110,.12),0 12px 30px rgba(255,55,110,.3)}
+#reactionBox{width:min(500px,90vw);height:250px;margin:20px auto;background:linear-gradient(145deg,#3c3f50,#292b39);border-radius:18px;display:flex;justify-content:center;align-items:center;font-size:25px;cursor:pointer;border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px rgba(255,255,255,.08),0 15px 35px rgba(0,0,0,.25)}
+#memory{display:grid;grid-template-columns:repeat(3,80px);gap:10px;justify-content:center}
+.memoryButton{width:80px;height:80px}
+#numberBoard{display:grid;grid-template-columns:repeat(4,70px);gap:8px;justify-content:center}
+.numberButton{width:70px;height:70px;font-size:22px}
+.info{font-size:20px;font-weight:700}
+.back{background:linear-gradient(180deg,#b52e43,#812133)}
+.back:hover{background:linear-gradient(180deg,#d13a50,#98263b)}
+@media(max-width:650px){.gameButton{width:100%;max-width:360px}.game{padding-left:10px;padding-right:10px}h1{margin-top:20px}#memory{grid-template-columns:repeat(3,72px)}.memoryButton{width:72px;height:72px}#numberBoard{grid-template-columns:repeat(4,62px)}.numberButton{width:62px;height:62px}}
 </style>
 </head>
 
@@ -166,10 +115,17 @@ canvas {
         👾 敵よけ
     </button>
 
-    <button class="gameButton" onclick="startNumber()">
-        🔢 数字パズル
-    </button>
-
+    <button class="gameButton" onclick="startNumber()">🔢 数字パズル</button>
+    <button class="gameButton" onclick="startWhack()">🐹 モグラたたき</button>
+    <button class="gameButton" onclick="startColor()">🎨 色あて</button>
+    <button class="gameButton" onclick="startMath()">🧮 計算チャレンジ</button>
+    <button class="gameButton" onclick="startTyping()">⌨️ タイピング</button>
+    <button class="gameButton" onclick="startPong()">🏓 ミニ・ポン</button>
+    <button class="gameButton" onclick="startSnake()">🐍 スネーク</button>
+    <button class="gameButton" onclick="startDots()">🔵 ドット集め</button>
+    <button class="gameButton" onclick="startSimon()">🎵 色順記憶</button>
+    <button class="gameButton" onclick="startLights()">💡 ライト消し</button>
+    <button class="gameButton" onclick="startMaze()">🌀 迷路ダッシュ</button>
 </div>
 
 
@@ -376,6 +332,17 @@ canvas {
 </div>
 
 
+<div id="gameWhack" class="game"><h2>🐹 モグラたたき</h2><p>モグラが出たら押そう！</p><div id="whackBoard" class="extraBoard"></div><p class="info">スコア：<span id="whackScore">0</span>　残り：<span id="whackTime">20</span>秒</p><button onclick="startWhack()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameColor" class="game"><h2>🎨 色あて</h2><p>文字の意味ではなく、文字の色を選ぼう！</p><div id="colorWord" class="bigWord">START</div><div id="colorChoices" class="choiceGrid"></div><p class="info">スコア：<span id="colorScore">0</span>　残り：<span id="colorTime">20</span>秒</p><button onclick="startColor()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameMath" class="game"><h2>🧮 計算チャレンジ</h2><div id="mathQuestion" class="bigWord">START</div><input id="mathAnswer" class="gameInput" inputmode="numeric" placeholder="答え"><button onclick="mathSubmit()">回答</button><p class="info">正解：<span id="mathScore">0</span>　残り：<span id="mathTime">30</span>秒</p><button onclick="startMath()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameTyping" class="game"><h2>⌨️ タイピング</h2><div id="typingWord" class="bigWord">START</div><input id="typingInput" class="gameInput" autocomplete="off" placeholder="ここに入力"><p class="info">スコア：<span id="typingScore">0</span>　残り：<span id="typingTime">30</span>秒</p><button onclick="startTyping()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gamePong" class="game"><h2>🏓 ミニ・ポン</h2><canvas id="pongCanvas" width="500" height="320"></canvas><p>↑↓ または W/S でバー操作</p><p class="info">スコア：<span id="pongScore">0</span></p><button onclick="startPong()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameSnake" class="game"><h2>🐍 スネーク</h2><canvas id="snakeCanvas" width="400" height="400"></canvas><p>矢印キーで動こう！</p><p class="info">スコア：<span id="snakeScore">0</span></p><button onclick="startSnake()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameDots" class="game"><h2>🔵 ドット集め</h2><canvas id="dotsCanvas" width="500" height="350"></canvas><p>青い四角で黄色いドットを集めよう！</p><p class="info">スコア：<span id="dotsScore">0</span>　残り：<span id="dotsTime">30</span>秒</p><button onclick="startDots()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameSimon" class="game"><h2>🎵 色順記憶</h2><p>光った順番を覚えて同じ順に押そう！</p><div id="simonBoard" class="simonGrid"><button data-simon="0">🔴</button><button data-simon="1">🟢</button><button data-simon="2">🔵</button><button data-simon="3">🟡</button></div><p class="info">レベル：<span id="simonLevel">1</span></p><button onclick="startSimon()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameLights" class="game"><h2>💡 ライト消し</h2><p>全部のライトを消そう！</p><div id="lightsBoard" class="lightsGrid"></div><p class="info">手数：<span id="lightsMoves">0</span></p><button onclick="startLights()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+<div id="gameMaze" class="game"><h2>🌀 迷路ダッシュ</h2><canvas id="mazeCanvas" width="414" height="414"></canvas><p>矢印キーでゴールへ！</p><p class="info">タイム：<span id="mazeTime">0</span>秒</p><button onclick="startMaze()">START</button><button class="back" onclick="backMenu()">🏠 メニュー</button></div>
+
 <script>
 
 /* =====================================================
@@ -391,8 +358,7 @@ const games = [
     "gameJump",
     "gameBalloon",
     "gameCoin",
-    "gameEnemy",
-    "gameNumber"
+    "gameEnemy","gameNumber","gameWhack","gameColor","gameMath","gameTyping","gamePong","gameSnake","gameDots","gameSimon","gameLights","gameMaze"
 ];
 
 function hideGames() {
@@ -1504,6 +1470,51 @@ function numberClick(n,b) {
 
 }
 
+
+
+/* ===== 追加10ゲーム ===== */
+let wxT,wxPop,wxRun=false,wxScore=0;
+function startWhack(){showGame("gameWhack");clearInterval(wxT);clearInterval(wxPop);wxRun=true;wxScore=0;let t=20;whackScore.textContent=0;whackTime.textContent=t;whackBoard.innerHTML="";for(let i=0;i<12;i++){let b=document.createElement("button");b.onclick=()=>{if(wxRun&&b.classList.contains("active")){wxScore++;whackScore.textContent=wxScore;b.classList.remove("active")}};whackBoard.appendChild(b)}function pop(){if(wxRun){[...whackBoard.children].forEach(b=>b.classList.remove("active"));whackBoard.children[Math.random()*12|0].classList.add("active")}}pop();wxPop=setInterval(pop,600);wxT=setInterval(()=>{whackTime.textContent=--t;if(t<=0){wxRun=false;clearInterval(wxPop);clearInterval(wxT);alert("終了！ スコア："+wxScore)}},1000)}
+
+let coT,coRun=false,coScore=0,coTarget=0;const cols=[["赤","red"],["青","blue"],["緑","limegreen"],["黄","gold"],["紫","purple"]];
+function startColor(){showGame("gameColor");clearInterval(coT);coRun=true;coScore=0;let t=20;colorScore.textContent=0;colorTime.textContent=t;function q(){coTarget=Math.random()*5|0;let paint=Math.random()*5|0;colorWord.textContent=cols[coTarget][0];colorWord.style.color=cols[paint][1];colorChoices.innerHTML="";cols.forEach((c,i)=>{let b=document.createElement("button");b.textContent=c[0];b.style.background=c[1];b.onclick=()=>{if(coRun){coScore+=i===coTarget?1:-1;coScore=Math.max(0,coScore);colorScore.textContent=coScore;q()}};colorChoices.appendChild(b)})}q();coT=setInterval(()=>{colorTime.textContent=--t;if(t<=0){coRun=false;clearInterval(coT);alert("終了！ スコア："+coScore)}},1000)}
+
+let maT,maRun=false,maScore=0,maA,maB,maOp;
+function startMath(){showGame("gameMath");clearInterval(maT);maRun=true;maScore=0;let t=30;mathScore.textContent=0;mathTime.textContent=t;function q(){maA=1+Math.random()*30|0;maB=1+Math.random()*20|0;maOp=Math.random()<.5?"+":"-";if(maOp==="-"&&maB>maA)[maA,maB]=[maB,maA];mathQuestion.textContent=`${maA} ${maOp} ${maB} = ?`;mathAnswer.value="";mathAnswer.focus()}window._mq=q;q();maT=setInterval(()=>{mathTime.textContent=--t;if(t<=0){maRun=false;clearInterval(maT);alert("終了！ 正解："+maScore)}},1000)}
+function mathSubmit(){if(!maRun)return;let ans=maOp==="+"?maA+maB:maA-maB;if(Number(mathAnswer.value)===ans)maScore++;mathScore.textContent=maScore;window._mq()}
+mathAnswer.addEventListener("keydown",e=>{if(e.key==="Enter")mathSubmit()});
+
+let tyT,tyRun=false,tyScore=0,tyTarget="";const words=["ゲーム","チャッピー","テトリス","コイン","ジャンプ","パズル","スピード","スター"];
+function startTyping(){showGame("gameTyping");clearInterval(tyT);tyRun=true;tyScore=0;let t=30;typingScore.textContent=0;typingTime.textContent=t;function q(){tyTarget=words[Math.random()*words.length|0];typingWord.textContent=tyTarget;typingInput.value="";typingInput.focus()}window._tq=q;q();tyT=setInterval(()=>{typingTime.textContent=--t;if(t<=0){tyRun=false;clearInterval(tyT);alert("終了！ スコア："+tyScore)}},1000)}
+typingInput.addEventListener("input",()=>{if(tyRun&&typingInput.value===tyTarget){tyScore++;typingScore.textContent=tyScore;window._tq()}});
+
+let poRAF,poRun=false,poY=130,poScore=0,poB;
+function startPong(){showGame("gamePong");pongCtx=document.getElementById("pongCanvas").getContext("2d");poRun=true;poY=130;poScore=0;poB={x:250,y:160,vx:4,vy:2};pongScore.textContent=0;cancelAnimationFrame(poRAF);pongLoop()}
+function pongLoop(){if(!poRun)return;let c=pongCtx;c.clearRect(0,0,500,320);c.fillStyle="#fff";c.fillRect(15,poY,12,60);c.fillRect(473,140,12,60);poB.x+=poB.vx;poB.y+=poB.vy;if(poB.y<8||poB.y>312)poB.vy*=-1;if(poB.x<32&&poB.y>poY-8&&poB.y<poY+68)poB.vx=Math.abs(poB.vx);if(poB.x>468&&poB.y>132&&poB.y<208)poB.vx=-Math.abs(poB.vx);if(poB.x<0){poRun=false;alert("ミス！ スコア："+poScore);return}if(poB.x>500){poScore++;pongScore.textContent=poScore;poB={x:250,y:160,vx:-4,vy:2}}c.beginPath();c.arc(poB.x,poB.y,8,0,7);c.fill();poRAF=requestAnimationFrame(pongLoop)}
+document.addEventListener("keydown",e=>{if(poRun){if(["ArrowUp","w","W"].includes(e.key))poY=Math.max(0,poY-12);if(["ArrowDown","s","S"].includes(e.key))poY=Math.min(260,poY+12)}});
+
+let snT,snRun=false,sn=[],snD={x:1,y:0},snF={x:5,y:5},snScore=0;
+function startSnake(){showGame("gameSnake");snakeCtx=document.getElementById("snakeCanvas").getContext("2d");sn=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];snD={x:1,y:0};snF={x:Math.random()*20|0,y:Math.random()*20|0};snScore=0;snRun=true;snakeScore.textContent=0;clearInterval(snT);snT=setInterval(snakeTick,120)}
+function snakeTick(){if(!snRun)return;let h={x:sn[0].x+snD.x,y:sn[0].y+snD.y};if(h.x<0||h.x>=20||h.y<0||h.y>=20||sn.some(s=>s.x===h.x&&s.y===h.y)){snRun=false;clearInterval(snT);alert("ゲームオーバー！ スコア："+snScore);return}sn.unshift(h);if(h.x===snF.x&&h.y===snF.y){snScore++;snakeScore.textContent=snScore;snF={x:Math.random()*20|0,y:Math.random()*20|0}}else sn.pop();snakeCtx.clearRect(0,0,400,400);snakeCtx.fillStyle="#ffd84d";snakeCtx.fillRect(snF.x*20,snF.y*20,20,20);snakeCtx.fillStyle="#55e88a";sn.forEach(s=>snakeCtx.fillRect(s.x*20+1,s.y*20+1,18,18))}
+document.addEventListener("keydown",e=>{if(!snRun)return;let d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(d&&d[0]!==-snD.x&&d[1]!==-snD.y)snD={x:d[0],y:d[1]}});
+
+let dtRAF,dtRun=false,dtX=240,dtY=160,dtX2=100,dtY2=100,dtScore=0,dtT;
+function startDots(){showGame("gameDots");dtRun=true;dtX=240;dtY=160;dtScore=0;let t=30;dotsScore.textContent=0;dotsTime.textContent=t;clearInterval(dtT);dtT=setInterval(()=>{dotsTime.textContent=--t;if(t<=0){dtRun=false;clearInterval(dtT);alert("終了！ スコア："+dtScore)}},1000);cancelAnimationFrame(dtRAF);dotsLoop()}
+function dotsLoop(){if(!dtRun)return;if(keys.ArrowLeft)dtX-=4;if(keys.ArrowRight)dtX+=4;if(keys.ArrowUp)dtY-=4;if(keys.ArrowDown)dtY+=4;dtX=Math.max(0,Math.min(480,dtX));dtY=Math.max(0,Math.min(330,dtY));if(Math.hypot(dtX+10-dtX2,dtY+10-dtY2)<22){dtScore++;dotsScore.textContent=dtScore;dtX2=15+Math.random()*470;dtY2=15+Math.random()*320}dotsCtx=document.getElementById("dotsCanvas").getContext("2d");dotsCtx.clearRect(0,0,500,350);dotsCtx.fillStyle="#55aaff";dotsCtx.fillRect(dtX,dtY,20,20);dotsCtx.fillStyle="#ffd84d";dotsCtx.beginPath();dotsCtx.arc(dtX2,dtY2,10,0,7);dotsCtx.fill();dtRAF=requestAnimationFrame(dotsLoop)}
+
+let siSeq=[],siAt=0,siRun=false;
+function startSimon(){showGame("gameSimon");siSeq=[];siAt=0;siRun=false;simonLevel.textContent=1;siNext()}
+function siNext(){siSeq.push(Math.random()*4|0);siAt=0;siRun=false;simonLevel.textContent=siSeq.length;let i=0,bs=[...document.querySelectorAll("[data-simon]")],tm=setInterval(()=>{bs.forEach(b=>b.classList.remove("lit"));if(i>=siSeq.length){clearInterval(tm);siRun=true;return}let b=bs[siSeq[i++]];b.classList.add("lit");setTimeout(()=>b.classList.remove("lit"),280)},480)}
+document.querySelectorAll("[data-simon]").forEach(b=>b.onclick=()=>{if(!siRun)return;let n=+b.dataset.simon;if(n!==siSeq[siAt]){siRun=false;alert("まちがい！ レベル："+siSeq.length);return}if(++siAt===siSeq.length)setTimeout(siNext,400)});
+
+let li=[];
+function startLights(){showGame("gameLights");li=Array.from({length:25},()=>Math.random()<.5);lightsMoves.textContent=0;lightsBoard.innerHTML="";li.forEach((v,i)=>{let b=document.createElement("button");b.className=v?"":"off";b.onclick=()=>light(i);lightsBoard.appendChild(b)})}
+function light(i){let x=i%5,y=i/5|0;[i,i-1,i+1,i-5,i+5].filter(j=>j>=0&&j<25&&Math.abs(j%5-x)+Math.abs((j/5|0)-y)<=1).forEach(j=>li[j]=!li[j]);lightsMoves.textContent=+lightsMoves.textContent+1;[...lightsBoard.children].forEach((b,j)=>b.className=li[j]?"":"off");if(li.every(v=>!v))alert("クリア！")}
+
+const mm=["111111111","100000001","101111101","101000101","101011101","101010001","101011111","100000001","111111111"];let mz={x:1,y:1},mzRun=false,mzStart;
+function startMaze(){showGame("gameMaze");mazeCtx=document.getElementById("mazeCanvas").getContext("2d");mz={x:1,y:1};mzRun=true;mzStart=Date.now();mazeDraw()}
+function mazeDraw(){let c=mazeCtx,z=46;c.clearRect(0,0,414,414);for(let y=0;y<9;y++)for(let x=0;x<9;x++){c.fillStyle=mm[y][x]==="1"?"#303552":"#11152c";c.fillRect(x*z,y*z,z-2,z-2)}c.fillStyle="#55e88a";c.fillRect(7*z+10,7*z+10,25,25);c.fillStyle="#55aaff";c.fillRect(mz.x*z+10,mz.y*z+10,25,25);if(mzRun){mazeTime.textContent=((Date.now()-mzStart)/1000).toFixed(1);requestAnimationFrame(mazeDraw)}}
+document.addEventListener("keydown",e=>{if(!mzRun)return;let d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(!d)return;let x=mz.x+d[0],y=mz.y+d[1];if(mm[y]?.[x]==="0"){mz={x,y};if(x===7&&y===7){mzRun=false;alert("ゴール！ タイム："+mazeTime.textContent+"秒")}}});
 
 /* =====================================================
    初期状態
